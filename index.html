@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>De Quem Cobra..</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<style>
+
+	#map-canvas {
+		width: 100%; 
+		height: 100%;
+	}
+
+	#map-canvas img { 
+		max-width: none; 
+	}
+
+	html, body {
+		width: 100%; 
+		height: 100%
+	}
+
+	body {
+		margin-top: 0px; 
+		margin-right: 0px; 
+		margin-left: 0px; 
+		margin-bottom: 0px;
+		background: #3E4095;
+	}
+
+	.header {
+		overflow: hidden;
+	}
+
+	.header-bar {
+		border-top: 5px solid #00A859;
+	}
+
+	.header-bar:before {
+		border-top: 5px solid #FFCC29;
+		content: ' ';
+		display: block;
+	}
+
+	#content {
+		position:relative;
+		margin:0;padding:0;
+		float:left;
+		width:100%;
+	}
+	</style>
+	<link rel="stylesheet" type="text/css" href="./files/css/bootstrap.min.css">
+	
+	<script type="text/javascript" src="./files/js/jquery-1.10.1.js"></script>
+	<script type="text/javascript" src="./files/js/xml2jsobj.js"></script>
+	<script type="text/javascript" src="./files/js/underscore-min.js"></script>
+	<script type="text/javascript" src="./files/js/bootstrap.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<script>
+	var map, infoWindow, markers, deputados, deputadosSelected, infoWindowContent;
+	$(function(){
+		deputados = [];
+		markers = [];
+
+
+		var infoWindowHtml = [
+		'<address>',
+		'<strong><%= nomeParlamentar %></strong><br>',
+		'<strong>Partido:</strong> <%= partido %><br>',
+		'<abbr title="Telefone">Tel:</abbr> (123) <%= fone %><br>',
+		'<a href="mailto:<%= email %>"><%= email %></a>',
+		'</address>'].join('');
+
+		infoWindowContent = _.template(infoWindowHtml);
+
+		infoWindow = new google.maps.InfoWindow();
+		map = new google.maps.Map(document.getElementById('map-canvas'),  {
+			center: new google.maps.LatLng(44.5403, -78.5463),
+			zoom: 7,
+			disableDefaultUI: true
+		});
+
+		$('#modal_info').on('hidden', function () {
+			$('#estados').focus();
+		});
+
+		$('#estados').change( function (e) {
+			var center = new google.maps.LatLng(
+				$(this).find(":selected").attr("data-lat"), 
+				$(this).find(":selected").attr("data-lng")
+				);
+
+			deputadosSelected = _.where(deputados, {uf: this.value});
+			map.setCenter(center);
+			map.setZoom(7);
+
+			addMarkers();
+
+		});
+
+		google.maps.event.addListenerOnce(map, 'tilesloaded', loadDeputados);
+
+	});
+
+function loadDeputados(){
+	$.get('./files/deputados.xml', function(data){ 
+		var obj =  XML2jsobj(data.documentElement);
+		deputados = (obj && obj.deputado) ? obj.deputado : [];
+		addMarkers();        
+	});
+}
+
+function clearMap(){
+	_.each(markers, function(item, key, list){
+		item.setMap(null);
+	});
+	markers = [];
+}
+
+function addMarkers(){
+	clearMap();
+	var bounds = map.getBounds();
+	var southWest = bounds.getSouthWest();
+	var northEast = bounds.getNorthEast();
+	var lngSpan = northEast.lng() - southWest.lng();
+	var latSpan = northEast.lat() - southWest.lat();
+
+	_.each(deputadosSelected, function(item, key, list){
+
+		var latLng = new google.maps.LatLng(
+			southWest.lat() + latSpan * Math.random(),
+			southWest.lng() + lngSpan * Math.random()
+			);
+
+		var marker = new google.maps.Marker({
+			position: latLng,
+			map: map,
+			icon: "http://www.google.com/mapfiles/markerD.png"
+		});
+
+		google.maps.event.addListener(marker, 'click', function() {
+			infoWindow.setContent(infoWindowContent(item));
+			infoWindow.open(map, this);
+		});
+
+		markers.push(marker);
+
+	});
+}
+</script>
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="header-bar"></div>
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="./">De quem Cobrar</a>
+				<div class="nav-collapse pull-left">
+					<form class="navbar-search pull-left" action="">
+						<select id="estados">
+							<option data-lat="-8.77" data-lng="-70.55" value="AC">Acre</option>
+							<option data-lat="-9.71" data-lng="-35.73" value="AL">Alagoas</option>
+							<option data-lat="1.41" data-lng="-51.77" value="AP">Amapá</option>
+							<option data-lat="-3.07" data-lng="-61.66" value="AM">Amazonas</option>
+							<option data-lat="-12.96" data-lng="-38.51" value="BA">Bahia</option>
+							<option data-lat="-3.71" data-lng="-38.54" value="CE">Ceará</option>
+							<option data-lat="-15.83" data-lng="-47.86" value="DF">Distrito Federal</option>
+							<option data-lat="-19.19" data-lng="-40.34" value="ES">Espírito Santo</option>
+							<option data-lat="-16.64" data-lng="-49.31" value="GO">Goiás</option>
+							<option data-lat="-2.55" data-lng="-44.30" value="MA">Maranhão</option>
+							<option data-lat="-12.64" data-lng="-55.42" value="MT">Mato Grosso</option>
+							<option data-lat="-20.51" data-lng="-54.54" value="MS">Mato Grosso do Sul</option>
+							<option data-lat="-18.10" data-lng="-44.38" value="MG">Minas Gerais</option>
+							<option data-lat="-5.53" data-lng="-52.29" value="PA">Pará</option>
+							<option data-lat="-7.06" data-lng="-35.55" value="PB">Paraíba</option>
+							<option data-lat="-24.89" data-lng="-51.55" value="PR">Paraná</option>
+							<option data-lat="-8.28" data-lng="-35.07" value="PE">Pernambuco</option>
+							<option data-lat="-8.28" data-lng="-43.68" value="PI">Piauí</option>
+							<option data-lat="-22.84" data-lng="-43.15" value="RJ">Rio de Janeiro</option>
+							<option data-lat="-5.22" data-lng="-36.52" value="RN">Rio Grande do Norte</option>
+							<option data-lat="-19.19" data-lng="-51.22" value="RS">Rio Grande do Sul</option>
+							<option data-lat="-11.22" data-lng="-62.80" value="RO">Rondônia</option>
+							<option data-lat="1.89" data-lng="-61.22" value="RR">Roraima</option>
+							<option data-lat="-27.33" data-lng="-49.44" value="SC">Santa Catarina</option>
+							<option data-lat="-23.55" data-lng="-46.64" value="SP">São Paulo</option>
+							<option data-lat="-10.90" data-lng="-37.07" value="SE">Sergipe</option>
+							<option data-lat="-10.25" data-lng="-48.25" value="TO">Tocantins</option>
+						</select>
+					</form>
+				</div>
+				<div class="nav-collapse pull-right">
+					<ul class="nav">
+						<li class="divider-vertical"></li>
+						<li><a href="#modal_info" data-toggle="modal"><i class="icon-info-sign"></i> Sobre</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+
+	<div id="map-canvas"></div>
+
+
+</div>
+
+<!-- more info modal -->
+<div class="modal hide" id="modal_info">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">X</button>
+		<h3>Sobre ... de quem cobrar!?</h3>
+	</div>
+	<div class="modal-body">
+
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal" style="float: right;">Fechar</a>
+	</div>
+</div>
+</body>
+</html>
