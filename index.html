@@ -150,14 +150,6 @@ function addMarkers(){
 </script>
 </head>
 <body>
-	<div id="fb-root"></div>
-	<script>(function(d, s, id) {
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) return;
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=196261910534179";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));</script>
 	<div class="navbar navbar-fixed-top">
 		<div class="header-bar"></div>
 		<div class="navbar-inner">
@@ -207,8 +199,7 @@ function addMarkers(){
 							<a href="https://twitter.com/share" class="twitter-share-button" data-lang="pt" data-count="none">Tweetar</a>
 							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 						</li>
-						<li>
-							<div class="fb-like" data-href="http://developers.facebook.com/docs/reference/plugins/like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+						<li><iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Freference%2Fplugins%2Flike&amp;send=false&amp;layout=button_count&amp;width=20&amp;show_faces=true&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=196261910534179" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
 						</li>
 					</ul>
 					<ul class="nav">
