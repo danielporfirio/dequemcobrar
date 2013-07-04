@@ -91,8 +91,6 @@
 				);
 
 			deputadosSelected = _.where(deputados, {uf: this.value});
-			map.setCenter(center);
-			map.setZoom(7);
 
 			addMarkers();
 
@@ -119,18 +117,10 @@ function clearMap(){
 
 function addMarkers(){
 	clearMap();
-	var bounds = map.getBounds();
-	var southWest = bounds.getSouthWest();
-	var northEast = bounds.getNorthEast();
-	var lngSpan = northEast.lng() - southWest.lng();
-	var latSpan = northEast.lat() - southWest.lat();
-
+    var bounds = new google.maps.LatLngBounds();
 	_.each(deputadosSelected, function(item, key, list){
-
-		var latLng = new google.maps.LatLng(
-			southWest.lat() + latSpan * Math.random(),
-			southWest.lng() + lngSpan * Math.random()
-			);
+        console.log(item);
+        var latLng = new google.maps.LatLng(item.cidadeNatal.lat, item.cidadeNatal.lng)
 
 		var marker = new google.maps.Marker({
 			position: latLng,
@@ -143,82 +133,83 @@ function addMarkers(){
 			infoWindow.open(map, this);
 		});
 
+        bounds.extend(latLng);
+        map.fitBounds(bounds);
 		markers.push(marker);
-
 	});
 }
 </script>
 </head>
 <body><div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=196261910534179";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-	<div class="navbar navbar-fixed-top">
-		<div class="header-bar"></div>
-		<div class="navbar-inner">
-			<div class="container-fluid">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-				<a class="brand" href="./">De quem Cobrar</a>
-				<div class="nav-collapse pull-left">
-					<form class="navbar-search pull-left" action="">
-						<select id="estados">
-							<option data-lat="-8.77" data-lng="-70.55" value="AC">Acre</option>
-							<option data-lat="-9.71" data-lng="-35.73" value="AL">Alagoas</option>
-							<option data-lat="1.41" data-lng="-51.77" value="AP">Amapá</option>
-							<option data-lat="-3.07" data-lng="-61.66" value="AM">Amazonas</option>
-							<option data-lat="-12.96" data-lng="-38.51" value="BA">Bahia</option>
-							<option data-lat="-3.71" data-lng="-38.54" value="CE">Ceará</option>
-							<option data-lat="-15.83" data-lng="-47.86" value="DF">Distrito Federal</option>
-							<option data-lat="-19.19" data-lng="-40.34" value="ES">Espírito Santo</option>
-							<option data-lat="-16.64" data-lng="-49.31" value="GO">Goiás</option>
-							<option data-lat="-2.55" data-lng="-44.30" value="MA">Maranhão</option>
-							<option data-lat="-12.64" data-lng="-55.42" value="MT">Mato Grosso</option>
-							<option data-lat="-20.51" data-lng="-54.54" value="MS">Mato Grosso do Sul</option>
-							<option data-lat="-18.10" data-lng="-44.38" value="MG">Minas Gerais</option>
-							<option data-lat="-5.53" data-lng="-52.29" value="PA">Pará</option>
-							<option data-lat="-7.06" data-lng="-35.55" value="PB">Paraíba</option>
-							<option data-lat="-24.89" data-lng="-51.55" value="PR">Paraná</option>
-							<option data-lat="-8.28" data-lng="-35.07" value="PE">Pernambuco</option>
-							<option data-lat="-8.28" data-lng="-43.68" value="PI">Piauí</option>
-							<option data-lat="-22.84" data-lng="-43.15" value="RJ">Rio de Janeiro</option>
-							<option data-lat="-5.22" data-lng="-36.52" value="RN">Rio Grande do Norte</option>
-							<option data-lat="-19.19" data-lng="-51.22" value="RS">Rio Grande do Sul</option>
-							<option data-lat="-11.22" data-lng="-62.80" value="RO">Rondônia</option>
-							<option data-lat="1.89" data-lng="-61.22" value="RR">Roraima</option>
-							<option data-lat="-27.33" data-lng="-49.44" value="SC">Santa Catarina</option>
-							<option data-lat="-23.55" data-lng="-46.64" value="SP">São Paulo</option>
-							<option data-lat="-10.90" data-lng="-37.07" value="SE">Sergipe</option>
-							<option data-lat="-10.25" data-lng="-48.25" value="TO">Tocantins</option>
-						</select>
-					</form>
-				</div>
-				<div class="nav-collapse pull-right">
-					<ul class="nav" style="margin: 10px 0;">
-						<li style="margin: 0 10px;">
-							<a href="https://twitter.com/share" class="twitter-share-button" data-lang="pt" data-count="none">Tweetar</a>
-							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-						</li>
-						<li><div class="fb-like" data-href="http://danielporfirio.com/dequemcobrar/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div>
-						</li>
-					</ul>
-					<ul class="nav">
-						<li class="divider-vertical"></li>
-						<li><a href="#modal_info" data-toggle="modal"><i class="icon-info-sign"></i> Sobre</a></li>
-					</ul>
-				</div><!--/.nav-collapse -->
-			</div>
-		</div>
-	</div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=196261910534179";
+      fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+  <div class="navbar navbar-fixed-top">
+      <div class="header-bar"></div>
+      <div class="navbar-inner">
+         <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+           </a>
+           <a class="brand" href="./">De quem Cobrar</a>
+           <div class="nav-collapse pull-left">
+               <form class="navbar-search pull-left" action="">
+                  <select id="estados">
+                     <option data-lat="-8.77" data-lng="-70.55" value="AC">Acre</option>
+                     <option data-lat="-9.71" data-lng="-35.73" value="AL">Alagoas</option>
+                     <option data-lat="1.41" data-lng="-51.77" value="AP">Amapá</option>
+                     <option data-lat="-3.07" data-lng="-61.66" value="AM">Amazonas</option>
+                     <option data-lat="-12.96" data-lng="-38.51" value="BA">Bahia</option>
+                     <option data-lat="-3.71" data-lng="-38.54" value="CE">Ceará</option>
+                     <option data-lat="-15.83" data-lng="-47.86" value="DF">Distrito Federal</option>
+                     <option data-lat="-19.19" data-lng="-40.34" value="ES">Espírito Santo</option>
+                     <option data-lat="-16.64" data-lng="-49.31" value="GO">Goiás</option>
+                     <option data-lat="-2.55" data-lng="-44.30" value="MA">Maranhão</option>
+                     <option data-lat="-12.64" data-lng="-55.42" value="MT">Mato Grosso</option>
+                     <option data-lat="-20.51" data-lng="-54.54" value="MS">Mato Grosso do Sul</option>
+                     <option data-lat="-18.10" data-lng="-44.38" value="MG">Minas Gerais</option>
+                     <option data-lat="-5.53" data-lng="-52.29" value="PA">Pará</option>
+                     <option data-lat="-7.06" data-lng="-35.55" value="PB">Paraíba</option>
+                     <option data-lat="-24.89" data-lng="-51.55" value="PR">Paraná</option>
+                     <option data-lat="-8.28" data-lng="-35.07" value="PE">Pernambuco</option>
+                     <option data-lat="-8.28" data-lng="-43.68" value="PI">Piauí</option>
+                     <option data-lat="-22.84" data-lng="-43.15" value="RJ">Rio de Janeiro</option>
+                     <option data-lat="-5.22" data-lng="-36.52" value="RN">Rio Grande do Norte</option>
+                     <option data-lat="-19.19" data-lng="-51.22" value="RS">Rio Grande do Sul</option>
+                     <option data-lat="-11.22" data-lng="-62.80" value="RO">Rondônia</option>
+                     <option data-lat="1.89" data-lng="-61.22" value="RR">Roraima</option>
+                     <option data-lat="-27.33" data-lng="-49.44" value="SC">Santa Catarina</option>
+                     <option data-lat="-23.55" data-lng="-46.64" value="SP">São Paulo</option>
+                     <option data-lat="-10.90" data-lng="-37.07" value="SE">Sergipe</option>
+                     <option data-lat="-10.25" data-lng="-48.25" value="TO">Tocantins</option>
+                 </select>
+             </form>
+         </div>
+         <div class="nav-collapse pull-right">
+           <ul class="nav" style="margin: 10px 0;">
+              <li style="margin: 0 10px;">
+                 <a href="https://twitter.com/share" class="twitter-share-button" data-lang="pt" data-count="none">Tweetar</a>
+                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+             </li>
+             <li><div class="fb-like" data-href="http://danielporfirio.com/dequemcobrar/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div>
+             </li>
+         </ul>
+         <ul class="nav">
+          <li class="divider-vertical"></li>
+          <li><a href="#modal_info" data-toggle="modal"><i class="icon-info-sign"></i> Sobre</a></li>
+      </ul>
+  </div><!--/.nav-collapse -->
+</div>
+</div>
+</div>
 
-	<div id="map-canvas"></div>
+<div id="map-canvas"></div>
 
 
 </div>
