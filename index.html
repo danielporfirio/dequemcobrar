@@ -49,105 +49,20 @@
 		width:100%;
 	}
 	</style>
-	<link rel="stylesheet" type="text/css" href="./files/css/bootstrap.min.css">
-	
-	<script type="text/javascript" src="./files/js/jquery-1.10.1.js"></script>
-	<script type="text/javascript" src="./files/js/xml2jsobj.js"></script>
-	<script type="text/javascript" src="./files/js/underscore-min.js"></script>
-	<script type="text/javascript" src="./files/js/bootstrap.min.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-	<script>
-	var map, infoWindow, markers, deputados, deputadosSelected, infoWindowContent;
-	$(function(){
-		deputados = [];
-		markers = [];
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+	<script data-main="./assets/scripts/main.js" src="./assets/scripts/lib/require.js"></script>
 
-
-		var infoWindowHtml = [
-		'<address>',
-		'<strong><%= nomeParlamentar %></strong><br>',
-		'<strong>Partido:</strong> <%= partido %><br>',
-		'<abbr title="Telefone">Tel:</abbr> (123) <%= fone %><br>',
-		'<a href="mailto:<%= email %>"><%= email %></a>',
-		'</address>'].join('');
-
-		infoWindowContent = _.template(infoWindowHtml);
-
-		infoWindow = new google.maps.InfoWindow();
-		map = new google.maps.Map(document.getElementById('map-canvas'),  {
-			center: new google.maps.LatLng(-8.754795, -52.910156),
-			zoom: 5,
-			disableDefaultUI: true
-		});
-
-		$('#modal_info').on('hidden', function () {
-			$('#estados').focus();
-		});
-
-		$('#estados').change( function (e) {
-			var center = new google.maps.LatLng(
-				$(this).find(":selected").attr("data-lat"), 
-				$(this).find(":selected").attr("data-lng")
-				);
-
-			deputadosSelected = _.where(deputados, {uf: this.value});
-
-			addMarkers();
-
-		});
-
-		google.maps.event.addListenerOnce(map, 'tilesloaded', loadDeputados);
-
-	});
-
-function loadDeputados(){
-	$.get('./files/deputados.xml', function(data){ 
-		var obj =  XML2jsobj(data.documentElement);
-		deputados = (obj && obj.deputado) ? obj.deputado : [];
-		addMarkers();        
-	});
-}
-
-function clearMap(){
-	_.each(markers, function(item, key, list){
-		item.setMap(null);
-	});
-	markers = [];
-}
-
-function addMarkers(){
-	clearMap();
-    var bounds = new google.maps.LatLngBounds();
-	_.each(deputadosSelected, function(item, key, list){
-        console.log(item);
-        var latLng = new google.maps.LatLng(item.cidadeNatal.lat, item.cidadeNatal.lng)
-
-		var marker = new google.maps.Marker({
-			position: latLng,
-			map: map,
-			icon: "http://www.google.com/mapfiles/markerD.png"
-		});
-
-		google.maps.event.addListener(marker, 'click', function() {
-			infoWindow.setContent(infoWindowContent(item));
-			infoWindow.open(map, this);
-		});
-
-        bounds.extend(latLng);
-        map.fitBounds(bounds);
-		markers.push(marker);
-	});
-}
-</script>
 </head>
 <body><div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=196261910534179";
-      fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
+    <script>
+	    (function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=196261910534179";
+			fjs.parentNode.insertBefore(js, fjs);
+	  	}(document, 'script', 'facebook-jssdk'));
+    </script>
   <div class="navbar navbar-fixed-top">
       <div class="header-bar"></div>
       <div class="navbar-inner">
