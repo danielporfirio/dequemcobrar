@@ -1,7 +1,13 @@
 require.config({
 	baseUrl:"assets/scripts/lib",
     paths : {
-        app:"../app"
+        app:"../app",
+        "jquery.bootstrap": "bootstrap"
+    },
+    shim: {
+        "jquery.bootstrap": {
+            deps: ["jquery"]
+        }
     }
 });
 
@@ -11,12 +17,14 @@ require(
 	'xml2jsobj',
 	'app/gmaps-app',
 	'text!../../dados/deputados.xml',
+	"jquery.bootstrap",
 	'async!http://maps.google.com/maps/api/js?sensor=false'
     ], 
-    function(_, $, xml2jsobj, gmapsApp, deputados_xml){  	
+    function($, _, xml2jsobj, gmapsApp, deputados_xml){  
+    $(function(){
     	var gmaps = new gmapsApp();
     	gmaps.init();
-    	var deputados = xml2jsobj($.parseXML(deputados_xml).documentElement);
+    	var deputados = xml2jsobj($.parseXML(deputados_xml).documentElement).deputado;
 
 		$('#modal_info').on('hidden', function () {
 			$('#estados').focus();
@@ -27,5 +35,8 @@ require(
 			selected = _.where(deputados, {uf: this.value});
 			gmaps.addMarkers(selected);
 		});
+
+    });
+    	
     }
 );

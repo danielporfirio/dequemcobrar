@@ -1,23 +1,19 @@
-define(["underscore"], 
-	function(_) {
+define(
+	["underscore",
+	"text!../app/templates/infoWindow.tpl"], 
+	function(_, infoWindow_tpl) {
 		return function(){
-			var map, infoWindow, markers, infoWindowHtml;
+			var map, infoWindow, markers, infoWindowContent;
 
 			this.init = function() {
-				infoWindowHtml = [
-				'<address>',
-				'<strong><%= nomeParlamentar %></strong><br>',
-				'<strong>Partido:</strong> <%= partido %><br>',
-				'<abbr title="Telefone">Tel:</abbr> (61) <%= fone %><br>',
-				'<a href="mailto:<%= email %>"><%= email %></a>',
-				'</address>'].join('');
+
+				infoWindowContent = _.template(infoWindow_tpl);
 
 				markers = [];
 				infoWindow = new google.maps.InfoWindow();
 				map = new google.maps.Map(document.getElementById('map-canvas'),  {
 					center: new google.maps.LatLng(-8.754795, -52.910156),
-					zoom: 5,
-					disableDefaultUI: true
+					zoom: 5
 				});
 			}
 
