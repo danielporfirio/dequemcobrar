@@ -31,9 +31,9 @@ require(
 		});
 
     	$('#estados').change( function (e) {
-    		gmaps.clearMap();
-			selected = _.where(deputados, {uf: this.value});
-			gmaps.addMarkers(selected);
+            gmaps.clearMap();
+            selected = _.where(deputados, {uf: this.value});
+            gmaps.addMarkers(selected);
 		});
 
     });
